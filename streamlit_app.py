@@ -74,11 +74,6 @@ class Hai_List():
         for j in sorted_l: # 並べ替えたリストを表示
             Hai_List.hai_display(j)
 
-# 入力した文字列を並べ替えて表示する
-    def order_text(l):
-        Hai_List.reorder_hai(l)
-        st.write(st.session_state[l])
-
 BLACK = '\033[0;30m'
 RED = '\033[31m'
 GRAY = '\033[37m'
@@ -151,13 +146,11 @@ none = Hai_List(' ', 'special', 61, '') # 空欄
 #     st.session_state['seq_list'].append(seq_obj)
 #     st.session_state['text'] += seq_obj.name
 
-
 # 入力をそのまま表示する文字列
 def insert_name(hai_name):
     if st.session_state['text']:
         st.session_state['text'] += hai_name
     else: st.session_state['text'] = hai_name
-
         
 # 入力をそのまま表示する文字列
 def insert_no(hai_no):
@@ -173,7 +166,6 @@ def order_text():
     print(seq_list)
     return seq_list
 
-
 def combine_seq(h):
     insert_name(chr(int(h.name, 16)))
     hai_seq.append(Hai_List.hai_display(h))    
@@ -185,20 +177,26 @@ def combine_no(h):
 
 hai_seq = []
 
-
 if 'text' not in st.session_state:
     st.session_state['text'] = ''
 
 st.text_area("表示したい配列を入力してください", key='text', height=150)
 
+col_m1, col_m2, col_m3 = st.columns(3)
+with col_m1:
+    st.button(chr(int(m1.name, 16)), on_click=lambda: combine_seq(m1))    
+with col_m2:
+    st.button(chr(int(p1.name, 16)), on_click=lambda: combine_seq(p1))
+with col_m3:
+    st.button(chr(int(p4.name, 16)), on_click=lambda: combine_seq(p4))
 
-st.button(chr(int(m1.name, 16)), on_click=lambda: combine_seq(m1))
-st.button(chr(int(p1.name, 16)), on_click=lambda: combine_seq(p1))
-st.button(chr(int(p4.name, 16)), on_click=lambda: combine_seq(p4))
 
 st.button('Order', on_click=lambda: order_text)
+st.button('Show', on_click=lambda: Hai_List.add_hai(hai_seq, none))
 
 
+if st.button('Delete'):
+    st.session_state['text'].remove(text)
 # 押すと二つ取得する関数
 # 表示する関数
 # 並べ替える関数
@@ -207,70 +205,16 @@ st.button('Order', on_click=lambda: order_text)
 
 # def reset_text():
 #     st.session_state['text'] = []
-#クリックしたら関数を実行するボタンを作る関数
-
-    
-
 
 #st.button('Space', on_click=lambda: Hai_List.insert_text(' '))
 #st.button('Reset', on_click=lambda: reset_text)
-
-st.button('Show', on_click=lambda: Hai_List.add_hai(hai_seq, none))
-
-# col_m1, col_m2, col_m3 = st.columns(3)
-# with col_m1:
-#      hai_button(chr(int(m3.name, 16)))    
-# with col_m2:
-#      hai_button(chr(int(m4.name, 16)))
-# with col_m3:
-#      hai_button(chr(int(m5.name, 16)))
-
-
-        
-if st.button('Delete'):
-    st.session_state['text'].remove(text)
     
 
-
-#if st.button('Display'):
-#    st.write(st.session_state[hai_seq])
-
-
-
-    
 # text = st.text_input("表示したい単語を入力してください")
-
-# col1, col2 = st.columns(2)
-
-# with col1:
-#     if st.button("追加", key=2):
-#         st.session_state["hai_list"].append(text)
-
-# with col2:
-#     if st.button("削除", key=3): 
-#         st.session_state["hai_list"].remove(text)
-
-# for output_text in st.session_state["hai_list"]:
-#     st.write("", output_text)
-
 
 
 # テキスト入力ボックス
 text_input = st.text_input('対局名', 'テキストを入力')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # テキスト入力ボックス
