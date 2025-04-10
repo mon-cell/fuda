@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
+from io import StringIO
+from collections import Counter
 
 class Hai_List():
     list_hai = [] # クラス属性　全てのインスタンスで共有
@@ -138,6 +140,132 @@ baida = Hai_List('1F02A', 'special', '', '') # 百搭ばいだオールマイテ
 ura = Hai_List('1F02B', 'special', 41, '') # 裏面
 batsu = Hai_List('1F02C', 'special', 51, '') # ばつ
 none = Hai_List(' ', 'special', 61, '') # 空欄
+
+
+# st.title('CSVテキスト')
+
+# csv_text = st.text_area('CSVテキストを貼り付け', height=300)
+
+# if csv_text:
+#     try:
+#         df = pd.read_csv(StringIO(csv_text))
+#         st.success('変換しました')
+#         #st.dataframe(df)
+#     except Exception as e:
+#         st.error(f'エラーです: {e}')
+
+        
+        
+file_path = 'rmu_2024Apr-2025Mar.csv'
+df = pd.read_csv(file_path)
+
+# df = pd.DataFrame({
+#      'aa': sss,
+#      'aa': sss,
+#      'aa': sss,
+#      'aa': sss,
+#  })
+
+
+
+# 全ての列名のスペース除く
+df.columns = df.columns.str.strip()
+df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+op_list0 = [' ']        
+op_list1 = df['Opponent 1'].tolist() # 列からリストを取得
+op_list2 = df['Opponent 2'].tolist()
+op_list3 = df['Opponent 3'].tolist()
+
+combined = op_list1 + op_list2 + op_list3
+counter = Counter(combined)
+
+sorted_items = [item for item, count in counter.most_common()] 
+sorted_items = op_list0 + sorted_items
+#sorted_list = list(dict.fromkeys(op_list0 + op_list1 + op_list2 + op_list3)) 
+
+selected_name = st.selectbox('名前を選んでください', sorted_items)
+st.write(f'選択したのは: {selected_name}')
+
+op = selected_name
+
+if selected_name == ' ':
+    df_cond = df
+else:
+    df_cond = df[(df['Opponent 1'] == op) | (df['Opponent 2'] == op) | (df['Opponent 3'] == op)]
+
+#column_stats = df_cond['Score'].describe
+#print(column_stats)
+
+
+df_1st = df_cond[(df_cond['Rank'] == 1)]
+df_2nd = df_cond[(df_cond['Rank'] == 2)]
+df_3rd = df_cond[(df_cond['Rank'] == 3)]
+df_4th = df_cond[(df_cond['Rank'] == 4)]
+
+def count_factor(i):
+    data = i['Rank'].value_counts()
+    sum_data = data.sum()
+    return sum_data
+
+num_all = df_cond['Rank'].count()
+
+num_1st = count_factor(df_1st)
+num_2nd = count_factor(df_2nd)
+num_3rd = count_factor(df_3rd)
+num_4th = count_factor(df_4th)
+
+rate_1st = 100 * num_1st / num_all
+rate_up_half = 100 * (num_1st + num_2nd) / num_all
+rate_4th = 100 * num_4th / num_all
+
+
+column_sum = df_cond['Total'].sum().round(1) # score average
+
+st.title('sss')
+st.dataframe(df_cond)
+
+
+st.write(op, f'との対戦数: ', num_all)
+
+st.write('対戦でのトップ数: ', num_1st, '(', rate_1st.round(1), '%)')
+st.write('対戦でのラス数: ', num_4th, '(', rate_4th.round(1), '%)')
+st.write('対戦での連帯率: ', rate_up_half.round(1), '%')
+st.write('対戦スコア合計: ', column_sum)
+
+
+# df_table = pd.DataFrame({
+#     'aa': sss,
+#     'aa': sss,
+#     'aa': sss,
+#     'aa': sss,
+# })
+
+#display(df_table)
+    
+# fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
+# axes[0].scatter(df_cond['Date'], df_cond['Total'])
+# #axes[0].scatter(df['Date'], df['Score'], c=colors)
+# axes[0].set_xlabel('aa')
+# axes[0].set_ylabel('bb')
+# axes[0].set_title('Score')
+# axes[0].axhline(y=0, color='b', linestyle='--')
+
+# axes[1].scatter(df_cond['Date'], df_cond['Rank'])
+# axes[1].set_xlabel('aa')
+# axes[1].set_ylabel('bb')
+# axes[1].set_title('Rank')
+# axes[1].axhline(y=2.5, color='b', linestyle='--')
+
+# #plt.savefig('aaa.png')
+# plt.tight_layout()
+# plt.show
+
+
+#output_csv_file = 'output.csv'
+#df.to_csv(output_csv_file, index=False, encoding='utf-8')
+
+
 
 
 # def insert_text(seq_obj):
