@@ -172,9 +172,9 @@ if uploaded_file is not None:
 #df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
 op_list0 = [' ']        
-op_list1 = df['Opponent 1'].tolist() # 列からリストを取得
-op_list2 = df['Opponent 2'].tolist()
-op_list3 = df['Opponent 3'].tolist()
+op_list1 = df['相手1'].tolist() # 列からリストを取得
+op_list2 = df['相手2'].tolist()
+op_list3 = df['相手3'].tolist()
 
 combined = op_list1 + op_list2 + op_list3
 counter = Counter(combined)
