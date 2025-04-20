@@ -6,12 +6,6 @@ from io import StringIO
 from collections import Counter
 
 
-# st.title('CSVテキスト')
-# csv_text = st.text_area('CSVテキストを貼り付け', height=300)
-
-# file_path = 'empty.csv'
-# df = pd.read_csv(file_path)
-
 st.title('CSVアップロード')
 uploaded_file = st.file_uploader('CSVファイルをアップロードしてください')
 
@@ -19,33 +13,10 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     #df = pd.read_csv(uploaded_file, encoding='utf-8', engine='python')
     st.success('ファイルを読み込みました')
-    st.write('対戦成績')
+    st.write('全対戦成績')
     st.dataframe(df)
-else:
-    st.warning('not')
 
     
-    
-#     df = df.applymap(lambda x: x.replace('△', '-').replace('−', '-') if isinstance(x, str) else x)
-
-
-#     for col in df.columns:
-#         try:
-#             df[col] = pd.to_numeric(df[col])
-#         except:
-#             pass    
-
-
-    
-
-
-# if csv_text:
-#     try:
-#         df = pd.read_csv(StringIO(csv_text))
-#         st.success('変換しました')
-#         st.dataframe(df)
-#     except Exception as e:
-#         st.error(f'エラーです: {e}')
 
 
 
@@ -77,12 +48,6 @@ if selected_name == ' ':
 else:
     df_cond = df[(df['相手1'] == op) | (df['相手2'] == op) | (df['相手3'] == op)]
 
-
-#column_stats = df_cond['Score'].describe
-#print(column_stats)
-
-
-
 # df = df.applymap(lambda x: float(str(x).replace('△', '-')) if str(x).replace('△', '-').replace('.', '', 1).lstrip('-').isdigit() else x)
 
 
@@ -90,7 +55,6 @@ df_1st = df_cond[(df_cond['順位'] == 1)]
 df_2nd = df_cond[(df_cond['順位'] == 2)]
 df_3rd = df_cond[(df_cond['順位'] == 3)]
 df_4th = df_cond[(df_cond['順位'] == 4)]
-
 
 
 def count_factor(i):
@@ -109,32 +73,16 @@ rate_1st = 100 * num_1st / num_all
 rate_up_half = 100 * (num_1st + num_2nd) / num_all
 rate_4th = 100 * num_4th / num_all
 
-
-
-
-#df['合計'] = df['合計'].astype(str).str.replace('△', '-', regex=False).astype(float)
-#df = df.applymap(lambda x: x.replace('△', '-') if isinstance(x, str) else x)
-
-#column_sum = df_cond['合計'].sum().round(1) # score average
-
-st.title('sss')
-st.dataframe(df_cond)
+column_sum = df_cond['合計'].sum().round(1) # score average
 
 
 st.write(op, f'との対戦数: ', num_all)
+st.dataframe(df_cond)
 
 st.write('対戦でのトップ数: ', num_1st, '(', rate_1st.round(1), '%)')
 st.write('対戦でのラス数: ', num_4th, '(', rate_4th.round(1), '%)')
 st.write('対戦での連帯率: ', rate_up_half.round(1), '%')
 #st.write('対戦スコア合計: ', column_sum)
-
-
-# df_table = pd.DataFrame({
-#     'aa': sss,
-#     'aa': sss,
-#     'aa': sss,
-#     'aa': sss,
-# })
 
     
 # fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
