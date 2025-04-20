@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 from io import StringIO
 from collections import Counter
@@ -154,23 +154,22 @@ none = Hai_List(' ', 'special', 61, '') # 空欄
 #     except Exception as e:
 #         st.error(f'エラーです: {e}')
 
-        
-        
-file_path = 'rmu_2024Apr-2025Mar.csv'
-df = pd.read_csv(file_path)
+ 
+st.title('CSVアップロード')
+uploaded_file = st.file_uploader('CSVファイルをアップロードしてください')
 
-# df = pd.DataFrame({
-#      'aa': sss,
-#      'aa': sss,
-#      'aa': sss,
-#      'aa': sss,
-#  })
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    #df = pd.read_csv(uploaded_file, encoding='utf-8', engine='python')
+    st.success('ファイルを読み込みました')
+    st.write('全対戦成績')
+    st.dataframe(df)
 
 
 
 # 全ての列名のスペース除く
-df.columns = df.columns.str.strip()
-df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+#df.columns = df.columns.str.strip()
+#df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
 op_list0 = [' ']        
 op_list1 = df['Opponent 1'].tolist() # 列からリストを取得
@@ -192,23 +191,23 @@ op = selected_name
 if selected_name == ' ':
     df_cond = df
 else:
-    df_cond = df[(df['Opponent 1'] == op) | (df['Opponent 2'] == op) | (df['Opponent 3'] == op)]
+    df_cond = df[(df['相手1'] == op) | (df['相手2'] == op) | (df['相手3'] == op)]
 
 #column_stats = df_cond['Score'].describe
 #print(column_stats)
 
 
-df_1st = df_cond[(df_cond['Rank'] == 1)]
-df_2nd = df_cond[(df_cond['Rank'] == 2)]
-df_3rd = df_cond[(df_cond['Rank'] == 3)]
-df_4th = df_cond[(df_cond['Rank'] == 4)]
+df_1st = df_cond[(df_cond['順位'] == 1)]
+df_2nd = df_cond[(df_cond['順位'] == 2)]
+df_3rd = df_cond[(df_cond['順位'] == 3)]
+df_4th = df_cond[(df_cond['順位'] == 4)]
 
 def count_factor(i):
-    data = i['Rank'].value_counts()
+    data = i['順位'].value_counts()
     sum_data = data.sum()
     return sum_data
 
-num_all = df_cond['Rank'].count()
+num_all = df_cond['順位'].count()
 
 num_1st = count_factor(df_1st)
 num_2nd = count_factor(df_2nd)
@@ -220,28 +219,16 @@ rate_up_half = 100 * (num_1st + num_2nd) / num_all
 rate_4th = 100 * num_4th / num_all
 
 
-column_sum = df_cond['Total'].sum().round(1) # score average
+column_sum = df_cond['合計'].sum().round(1) # score average
 
-st.title('sss')
 st.dataframe(df_cond)
-
-
 st.write(op, f'との対戦数: ', num_all)
-
 st.write('対戦でのトップ数: ', num_1st, '(', rate_1st.round(1), '%)')
 st.write('対戦でのラス数: ', num_4th, '(', rate_4th.round(1), '%)')
 st.write('対戦での連帯率: ', rate_up_half.round(1), '%')
 st.write('対戦スコア合計: ', column_sum)
 
 
-# df_table = pd.DataFrame({
-#     'aa': sss,
-#     'aa': sss,
-#     'aa': sss,
-#     'aa': sss,
-# })
-
-#display(df_table)
     
 # fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 6))
 # axes[0].scatter(df_cond['Date'], df_cond['Total'])
