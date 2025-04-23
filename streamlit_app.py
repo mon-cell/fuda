@@ -171,8 +171,6 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
     else:
         df = pd.read_excel(uploaded_file)
-
-    # Work with the dataframe
     st.dataframe(df)
     st.success('ファイルを読み込みました')
     st.write('全対戦成績')
