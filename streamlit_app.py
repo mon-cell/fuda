@@ -5,6 +5,10 @@ import numpy as np
 from io import StringIO
 from collections import Counter
 
+st.set_page_config(page_title="top page", page_icon="")
+st.title("top page")
+
+
 def count_factor(i):
     data = i['順位'].value_counts()
     sum_data = data.sum()
@@ -61,15 +65,22 @@ if uploaded_file:
     rate_up_half = 100 * (num_1st + num_2nd) / num_all
     rate_4th = 100 * num_4th / num_all
 
-    column_sum = df_cond['合計'].sum().round(1) # score average
-
+    col_sum = df_cond['合計'].sum()
+    col_mean = np.mean(df_cond['合計'])
+    col_mean = round(float(col_mean), 1)
+    
+    col_stdv = np.std(df_cond['合計'])
+    col_stdv = round(float(col_stdv), 1)
+    
     st.dataframe(df_cond)
     st.write(op, f'との対戦数: ', num_all)
 
     st.write('対戦でのトップ数: ', num_1st, '(', rate_1st.round(1), '%)')
     st.write('対戦でのラス数: ', num_4th, '(', rate_4th.round(1), '%)')
     st.write('対戦での連帯率: ', rate_up_half.round(1), '%')
-    st.write('対戦スコア合計: ', column_sum)
+    st.write('対戦スコア合計: ', col_sum)
+    st.write('対戦スコア平均: ', col_mean)
+    st.write('対戦スコア標準偏差: ', col_stdv)
     
 else:
     st.warning('No file uploaded.')
