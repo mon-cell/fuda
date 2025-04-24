@@ -1,0 +1,14 @@
+import streamlit as st
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from io import StringIO
+from collections import Counter
+
+
+# タブ名に表示される
+st.set_page_config(page_title="Paihu", page_icon="")
+
+st.title("対局レポート")
+
+
